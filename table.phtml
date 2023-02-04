@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Jales</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<?php require_once __DIR__ . '/util-view.phtml'; ?>
+</head>
+
+<body ng-app='bravi' ng-controller="Ctrl as ctrl" ng-init='ctrl.onInit()'>
+	<div class="container">
+		<h2>Pessoas</h2>
+		<a href="pessoa" class="btn btn-default" role="button">Adicionar</a>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>id</th>
+					<th style="width:70%">nome</th>
+					<th>Qnt contatos</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="row in ctrl.list">
+					<td>{{row.id}}</td>
+					<td>{{row.nome}}</td>
+					<td>{{row.qnt_cnt}}</td>
+					<td>
+						<a href="pessoa?id={{row.id}}">
+							<span title="editar" class="glyphicon glyphicon-edit"></span>
+						</a> &nbsp;
+						<span ng-click="ctrl.excluirPessoa(row.id)" title="remover" class="glyphicon glyphicon-remove"></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script>
+		angular.module('bravi', ['myService'])
+			.controller('Ctrl', function($scope, $http, MS, $sce, $window) {
+				this.list = [];
+				this.onInit = async () => {
+					let res = await MS.actionHandler(buscaPessoas());
+					this.list = res.data;
+					$scope.$digest();
+				}
+				var buscaPessoas = () => {
+					return $http.get(`api/buscaPessoas`);
+				}
+				this.excluirPessoa = async (id) => {
+					if (!confirm("Excluir pessoa?")) return;
+					await MS.actionHandler(handlerExcluir(id), {
+						msgNotf: 'Sucesso!',
+					});
+					$scope.$digest();
+				}
+				let handlerExcluir = async (id) => {
+					await $http.delete(`api/deletePessoa?id=${id}`);
+					let res = await buscaPessoas();
+					this.list = res.data;
+				}
+			})
+	</script>
+</body>
+
+</html>
