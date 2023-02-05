@@ -41,11 +41,10 @@
 			.controller('Ctrl', function($scope, $http, MS, $sce, $window) {
 				this.list = [];
 				this.onInit = async () => {
-					let res = await MS.actionHandler(buscaPessoas(), {
-						msgNotf: '',
-					});
+					let res = await buscaPessoas();
 					this.list = res.data;
 					$scope.$digest();
+					
 				}
 				var buscaPessoas = () => {
 					return $http.get(`api/buscaPessoas`);

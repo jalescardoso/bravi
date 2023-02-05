@@ -79,7 +79,7 @@
 						<div class='form-group' ng-if="ctrl.contato.tipo != 'Email'">
 							<label class='col-md-2 control-label'>Telefone</label>
 							<div class='col-md-10'>
-								<input required class='form-control telefone' ng-model='ctrl.contato.valor' />
+								<input required type="tel" class='form-control telefone' ng-model='ctrl.contato.valor' />
 							</div>
 						</div>
 						<div class='form-group' ng-if="ctrl.contato.tipo == 'Email'">
@@ -110,9 +110,7 @@
 						get: (searchParams, prop) => searchParams.get(prop),
 					});
 					if (params.id) this.data.id = params.id;
-					let res = await MS.actionHandler(buscaPessoa(this.data.id), {
-						msgNotf: '',
-					});
+					let res = await buscaPessoa(this.data.id);
 					this.data = res.data;
 					$scope.$digest();
 				}
