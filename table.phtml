@@ -10,7 +10,7 @@
 
 <body ng-app='bravi' ng-controller="Ctrl as ctrl" ng-init='ctrl.onInit()'>
 	<div class="container">
-		<h2>Pessoas</h2>
+		<h2>Pessoas <a style="float: right;" type="button" class="btn btn-link" href="/suportes-balanceados">Suporte balanceados</a></h2>
 		<a href="pessoa" class="btn btn-default" role="button">Adicionar</a>
 		<table class="table table-striped">
 			<thead>
@@ -41,7 +41,9 @@
 			.controller('Ctrl', function($scope, $http, MS, $sce, $window) {
 				this.list = [];
 				this.onInit = async () => {
-					let res = await MS.actionHandler(buscaPessoas());
+					let res = await MS.actionHandler(buscaPessoas(), {
+						msgNotf: '',
+					});
 					this.list = res.data;
 					$scope.$digest();
 				}

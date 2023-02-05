@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Jales</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?php require_once __DIR__ . '/util-view.phtml'; ?>
+</head>
+
+<body ng-app='bravi' ng-controller="Ctrl as ctrl" ng-init='ctrl.onInit()'>
+    <div class="container">
+        <a type="button" class="btn btn-link" href="/">Pessoas</a>
+        <h2>Verificação de suporte balanceado</h2>
+        <form class="form-horizontal" ng-submit='ctrl.submitsuporte()'>
+            <div class="form-group">
+                <label for="email">String</label>
+                <input class="form-control" required ng-model="ctrl.stringSuporte">
+            </div>
+            <button type="submit" class="btn btn-default">Verificar</button>
+        </form>
+    </div>
+    <script>
+        angular.module('bravi', ['myService'])
+            .controller('Ctrl', function($scope, $http, MS, $sce, $window, $location) {
+                this.submitsuporte = async () => {
+                    let res = await MS.actionHandler($http.post(`api/suporteBalanceados`, {
+                        string: this.stringSuporte
+                    }), {
+                        msgNotf: ''
+                    });
+                    if (res.data.valido) MS.notifSucess("String válida!");
+                    else MS.notifError("String inválida!");
+                }
+            })
+    </script>
+</body>
+
+</html>

@@ -18,6 +18,9 @@ angular.module('myService', [])
                 $(options.selectorLoad).loading('stop');
             }
         }
-        this.notifSucess = (msg = null) => $.notify((msg || 'Ação realizada com sucesso'), "success");
+        this.notifSucess = (msg = null) => {
+            if (msg === '') return;
+            $.notify((msg || 'Ação realizada com sucesso'), "success");
+        }
         this.notifError = (msg = null) => $.notify((msg || 'Ocorreu um erro inesperado'), "error");
     })

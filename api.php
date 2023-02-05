@@ -8,8 +8,6 @@ class Api {
     function __construct() {
         $this->mysql = new Connector();
     }
-    private function indexAction() {
-    }
     // #[Route("/api/buscaPessoas", methods: ["GET"])]
     function buscaPessoasAction() {
         $pessoas = $this->mysql->DBFind("SELECT A.*, (select count(id) from contato WHERE id_pessoa = A.id) qnt_cnt FROM pessoa A")->rows;
@@ -52,6 +50,24 @@ class Api {
     function deletePessoaAction() {
         $this->mysql->DBDelete("pessoa", "WHERE id = ?", [$_GET['id']]);
     }
+    // #[Route("/api/suporteBalanceados", methods: ["POST"])]
+    function suporteBalanceadosAction() {
+        $string_param = $_POST['string'];
+        $pairs = function ($x) {
+            return match ($x) {
+                "(" => ")",
+                "[" => "]",
+                "{" => "}",
+                default => false
+            };
+        };
+        $arr = str_split($string_param);
+        foreach ($arr as $char) {
+            if ($pairs($char)) {
+            }
+        }
+        return json_encode(['valido' => false]);
+    }
     public function setAction() {
         try {
             $this->mysql->DBConnect();
@@ -60,7 +76,6 @@ class Api {
             $newAction = explode("?", $this->getParameter('api'))[0] . "Action";
             $echo = null;
             if (method_exists($this, $newAction)) $echo = $this->$newAction();
-            else if ($newAction == "Action" && method_exists($this, 'indexAction')) $echo = $this->indexAction();
             else header("HTTP/1.0 404 Not Found");
             $this->mysql->mysqli->commit();
             if ((bool)$echo) echo $echo;

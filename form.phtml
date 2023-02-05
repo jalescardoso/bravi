@@ -110,7 +110,9 @@
 						get: (searchParams, prop) => searchParams.get(prop),
 					});
 					if (params.id) this.data.id = params.id;
-					let res = await MS.actionHandler(buscaPessoa(this.data.id));
+					let res = await MS.actionHandler(buscaPessoa(this.data.id), {
+						msgNotf: '',
+					});
 					this.data = res.data;
 					$scope.$digest();
 				}
