@@ -53,20 +53,41 @@ class Api {
     // #[Route("/api/suporteBalanceados", methods: ["POST"])]
     function suporteBalanceadosAction() {
         $string_param = $_POST['string'];
-        $pairs = function ($x) {
-            return match ($x) {
-                "(" => ")",
-                "[" => "]",
-                "{" => "}",
-                default => false
+        $checkFunction = function ($string_param) {
+            $pairs = function ($x) {
+                return match ($x) {
+                    "(" => ")",
+                    "[" => "]",
+                    "{" => "}",
+                    default => false
+                };
             };
-        };
-        $arr = str_split($string_param);
-        foreach ($arr as $char) {
-            if ($pairs($char)) {
+            $arr = str_split($string_param);
+            foreach ($arr as $i => &$char) {
+                if (in_array($char, ['{', '[', '('])) {
+                    $new_string = implode($arr);
+                    $suporte_aberto_indice = $i;
+                    $str_para_frente = substr($new_string, $suporte_aberto_indice + 1, strlen($new_string));
+                    $check_suporte_fechado = strpos($str_para_frente, $pairs($char));
+                    if ($check_suporte_fechado === false) {
+                        throw new \Exception("não fechou o suporte $char");
+                    }
+                    $suporte_fechado_indice = strpos($new_string, $pairs($char));
+                    $arr[$suporte_aberto_indice] = 0;
+                    $arr[$suporte_fechado_indice] = 0;
+                }
             }
+            $new_string = implode($arr);
+            if (strpos($new_string, ')') !== false) throw new Exception("Suporte não ) foi aberto");
+            if (strpos($new_string, ']') !== false) throw new Exception("Suporte não ] foi aberto");
+            if (strpos($new_string, '}') !== false) throw new Exception("Suporte não } foi aberto");
+        };
+        try {
+            $checkFunction($string_param);
+            return json_encode(['valido' => true, 'mensagem' => $string_param]);
+        } catch (\Throwable $e) {
+            return json_encode(['valido' => false, 'mensagem' => $e->getMessage()]);
         }
-        return json_encode(['valido' => false]);
     }
     public function setAction() {
         try {

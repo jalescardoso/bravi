@@ -29,8 +29,8 @@
                     }), {
                         msgNotf: ''
                     });
-                    if (res.data.valido) MS.notifSucess("String válida!");
-                    else MS.notifError("String inválida!");
+                    if (res.data.valido) MS.notifSucess("String válida \n " + res.data.mensagem);
+                    else MS.notifError("String inválida: \n " + res.data.mensagem);
                 }
             })
     </script>
