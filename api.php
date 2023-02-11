@@ -1,7 +1,7 @@
 <?php
-include_once 'baseapi.php';
 
 use Connector;
+use modelos\{Pessoa};
 
 class Api {
     private Connector $mysql;
@@ -10,23 +10,21 @@ class Api {
     }
     // #[Route("/api/buscaPessoas", methods: ["GET"])]
     function buscaPessoasAction() {
-        $pessoas = $this->mysql->DBFind("SELECT A.*, (select count(id) from contato WHERE id_pessoa = A.id) qnt_cnt FROM pessoa A")->rows;
-        return json_encode($pessoas);
+        $pessoa = new Pessoa($this->mysql);
+        $rows = $pessoa->getPessoas()['rows'];
+        return json_encode($rows);
     }
     // #[Route("/api/buscaPessoa?id=1", methods: ["GET"])]
     function buscaPessoaAction() {
-        $pessoa = $this->mysql->DBFind("SELECT A.* FROM pessoa A WHERE A.id = ?", [$_GET['id']])->rows[0];
-        $pessoa['contatos'] = $this->mysql->DBFind("SELECT * FROM contato WHERE id_pessoa = {$pessoa['id']}")->rows;
+        $pessoa = $this->mysql->DBFind("SELECT A.* FROM pessoa A WHERE A.id = ?", [$_GET['id']])['rows'][0];
+        $pessoa['contatos'] = $this->mysql->DBFind("SELECT * FROM contato WHERE id_pessoa = {$pessoa['id']}")['rows'];
         return json_encode($pessoa);
     }
     // #[Route("/api/submitPessoa", methods: ["POST"])]
     function submitPessoaAction() {
-        if ((bool)$_POST['id']) {
-            $this->mysql->DBUpdate("pessoa", ['nome' => $_POST['nome']], "WHERE id = ?", [$_POST['id']]);
-        } else {
-            $_POST['id'] = $this->mysql->DBInsert("pessoa", ['nome' => $_POST['nome']]);
-        }
-        return json_encode(['id' => $_POST['id']]);
+        $pessoa = new Pessoa($this->mysql, $_POST);
+        $id = $pessoa->save($pessoa);
+        return json_encode(["id" => $id]);
     }
     // #[Route("/api/submitContato", methods: ["POST"])]
     function submitContatoAction() {

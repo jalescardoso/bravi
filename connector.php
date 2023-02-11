@@ -1,7 +1,7 @@
 <?php
 
 class Connector {
-    public $mysqli;
+    public \mysqli $mysqli;
     public function __construct() {
         $la = 'la';
     }
@@ -19,7 +19,7 @@ class Connector {
         $this->mysqli->autocommit(false);
         mysqli_set_charset($this->mysqli, "utf8mb4");
     }
-    public function DBInsert($table, $data, $params = []) {
+    public function DBInsert(string $table, array $data, array $params = []) {
         $data = (array)$data;
         unset($data['delete_at']);
         unset($data['id']);
@@ -34,7 +34,7 @@ class Connector {
         $this->DBQueryParams($sql, $refValues);
         return $this->mysqli->insert_id;
     }
-    public function DBUpdate($table, $data, $where, $params = []) {
+    public function DBUpdate(string $table, array $data, string $where, array $params = []) {
         $fields = $object = [];
         $data = (array)$data;
         unset($data['id']);
@@ -50,7 +50,7 @@ class Connector {
         $sql = "DELETE FROM " . $table . " " . $where;
         $this->DBQueryParams($sql, $params);
     }
-    private function param_types($arr) {
+    private function param_types(array $arr): string {
         $types = '';
         foreach ($arr as $a) {
             // i	corresponde a uma variável de tipo inteiro 
@@ -64,24 +64,21 @@ class Connector {
         }
         return $types;
     }
-    public function DBFind($queryin, $params = []) {
-        if (!(bool)$queryin) return;
+    public function DBFind(string $queryin, $params = []) : array {
         $return = new \stdClass();
         $return->query = true;
         $stmt = $this->DBQueryParams($queryin, $params);
         $result = $stmt->get_result();
         $return->num_rows = $result->num_rows;
         $return->rows = $result->fetch_all(MYSQLI_ASSOC);
-        if (str_contains(strtoupper($queryin), 'SQL_CALC_FOUND_ROWS'))
-            $return->total = (int)$this->mysqli->query("SELECT FOUND_ROWS() count")->fetch_assoc()['count'];
-        return $return;
+        return (array)$return;
     }
-    public function DBQuery($query) {
+    public function DBQuery($query): \mysqli_result {
         $response = $this->mysqli->query($query);
         if (!(bool)$response) throw new \Exception($this->mysqli->error);
         return $response;
     }
-    public function DBQueryParams($queryin, $params = []) {
+    public function DBQueryParams($queryin, $params = []): \mysqli_stmt {
         $stmt = $this->mysqli->prepare($queryin);
         if (!(bool)$stmt) throw new \Exception($this->mysqli->error);
         if (count($params)) {
