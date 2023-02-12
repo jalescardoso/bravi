@@ -1,11 +1,12 @@
 <?php
 
-namespace modelos;
+namespace model;
 
 use Connector;
-use interfaces\{Model};
+use interfaces\{iModel};
+use model\Model;
 
-class Pessoa implements Model {
+class Pessoa extends Model implements iModel {
     public ?int $id;
     public int $id_pessoa;
     public string $descricao;
@@ -33,14 +34,6 @@ class Pessoa implements Model {
             "descricao" => $this->descricao,
             "valor" => $this->valor,
         ];
-    }
-    public function save(): int {
-        if ((bool)$this->id) {
-            $this->mysql->DBUpdate($this->getTableName(), $this->getObject(), " where id = ?", [$this->id]);
-        } else {
-            $this->id = $this->mysql->DBInsert($this->getTableName(), $this->getObject());
-        }
-        return $this->id;
     }
     public function getPessoas(): array {
         return $this->mysql->DBFind("SELECT A.*, (select count(id) from contato WHERE id_pessoa = A.id) qnt_cnt FROM pessoa A");

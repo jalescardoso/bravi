@@ -1,7 +1,7 @@
 <?php
 
 use Connector;
-use modelos\{Pessoa};
+use model\{Pessoa};
 
 class Api {
     private Connector $mysql;
