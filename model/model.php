@@ -2,14 +2,14 @@
 
 namespace model;
 
-use Connector;
+use database\Mysql;
 use interfaces\{iModel};
 
 abstract class Model implements iModel {
     public ?int $id;
 
     public function __construct(
-        protected Connector $mysql,
+        protected Mysql $mysql,
         array $model = null
     ) {
     }

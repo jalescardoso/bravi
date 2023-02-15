@@ -2,7 +2,7 @@
 
 namespace model;
 
-use Connector;
+use database\Mysql;
 use interfaces\{iModel};
 use model\Model;
 
@@ -13,7 +13,7 @@ class Pessoa extends Model implements iModel {
     public string $tipo;
     public float $valor;
     public function __construct(
-        protected Connector $mysql,
+        protected Mysql $mysql,
         array $model = null
     ) {
         if ($model) {

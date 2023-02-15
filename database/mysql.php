@@ -1,10 +1,12 @@
 <?php
 
 namespace database;
+
 use mysqli, mysqli_result, mysqli_stmt;
 
 class Mysql {
     private mysqli $mysqli;
+    private bool $inTransaction = false;
     public function __construct(
         private string $DB_HOST,
         private string $DB_USERNAME,
@@ -14,10 +16,10 @@ class Mysql {
     ) {
         $this->mysqli = new mysqli($this->DB_HOST, $this->DB_USERNAME, $this->DB_PASSWORD, $this->DB_NAME, $this->DB_PORT);
         if ($this->mysqli->connect_errno) throw new \Exception($this->mysqli->connect_error);
-        $this->mysqli->autocommit(false); # start transaction
         mysqli_set_charset($this->mysqli, "utf8mb4");
     }
     public function DBInsert(string $table, array $data, array $params = []) {
+        $this->startTransaction();
         $data = (array)$data;
         unset($data['delete_at']);
         unset($data['id']);
@@ -33,6 +35,7 @@ class Mysql {
         return $this->mysqli->insert_id;
     }
     public function DBUpdate(string $table, array $data, string $where, array $params = []) {
+        $this->startTransaction();
         $fields = $object = [];
         $data = (array)$data;
         unset($data['id']);
@@ -86,4 +89,18 @@ class Mysql {
         if ((bool)$stmt->error) throw new \Exception($stmt->error);
         return $stmt;
     }
+    public function commit() {
+        $this->mysqli->autocommit(true);
+        $this->inTransaction = false;
+        $this->mysqli->commit();
+    }
+    public function close() {
+        $this->mysqli->close();
+    }
+    public function startTransaction() {
+        if ($this->inTransaction) return;
+        $this->mysqli->autocommit(FALSE);
+        $this->inTransaction = true;
+    }
+
 }
