@@ -1,7 +1,7 @@
 <?php
 
 namespace Lib;
-
+use Lib\App;
 class Router {
     public static function get($route, $callback) {
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') !== 0) {
@@ -16,7 +16,8 @@ class Router {
         self::on($route, $callback);
     }
     public static function on($regex, $cb) {
-        $params = $_SERVER['REQUEST_URI'];
+        $params = explode("?", $_SERVER['REQUEST_URI'])[0];
+        // $params = $_SERVER['REQUEST_URI'];
         $params = (stripos($params, "/") !== 0) ? "/" . $params : $params;
         $regex = str_replace('/', '\/', $regex);
         $is_match = preg_match('/^' . ($regex) . '$/', $params, $matches, PREG_OFFSET_CAPTURE);
@@ -27,7 +28,10 @@ class Router {
             $params = array_map(function ($param) {
                 return $param[0];
             }, $matches);
-            $cb(new Request($params), new Response());
+            $params = array_merge($params, $_GET);
+            $app = new App();
+            $app->handler($cb, new Request($params), new Response());
+            // $cb(new Request($params), new Response());
         }
     }
 }

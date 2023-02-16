@@ -8,26 +8,30 @@ use model\Model;
 
 class Contato extends Model implements iModel {
     public ?int $id;
-    public string $nome;
+    public int $id_pessoa;
+    public string $descricao;
+    public string $tipo;
+    public float $valor;
     public function __construct(
         protected Connector $mysql,
-        array $model = null
     ) {
-        if ($model) {
-            $this->id   = $model['id'] ?: null;
-            $this->nome = $model['nome'] ?: throw new \Exception("Nome da pessoa obrigatório");
-        }
     }
     public function getTableName(): string {
-        return "pessoa";
+        return "contato";
     }
     public function getObject(): array {
         return [
             "id"   => $this->id,
-            "nome" => $this->nome
+            "id_pessoa" => $this->id_pessoa,
+            "descricao" => $this->descricao,
+            "valor" => $this->valor,
         ];
     }
-    public function getPessoas(): array {
-        return $this->mysql->DBFind("SELECT A.*, (select count(id) from contato WHERE id_pessoa = A.id) qnt_cnt FROM pessoa A");
+    public function setObject(array $data): void {
+        $this->id   = $data['id'] ?: null;
+        $this->id_pessoa = $data['id_pessoa'] ?: throw new \Exception("Pessoa relacionada ao contato obrigatório");
+        $this->descricao = $data['descricao'] ?: throw new \Exception("Descrição obrigatório");
+        $this->tipo = $data['tipo'] ?: throw new \Exception("Tipo obrigatório");
+        $this->valor = $data['valor'] ?: throw new \Exception("Valor obrigatório");
     }
 }

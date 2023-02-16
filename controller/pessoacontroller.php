@@ -8,26 +8,32 @@ use database\MysqlFactory;
 use Lib\{Request, Response};
 
 class PessoaController extends Controller {
-    private MysqlFactory $mysql;
-    function __construct() {
-        $this->mysql = new MysqlFactory();
+    function __construct(
+        private MysqlFactory $mysql
+    ) {
     }
-    # [Route("/api/buscaPessoas", methods: ["GET"])]
     public function indexAction(Request $req, Response $res) {
-        require_once __DIR__ . '/../view/index.phtml';
+        $res->status(200)->renderView('index.phtml');
     }
-    // #[Route("/api/buscaPessoas", methods: ["GET"])]
-    function buscaPessoas(Request $req, Response $res) {
+    function buscaPessoasAction(Request $req, Response $res) {
         $mysql = $this->mysql->createConnection();
         $pessoaModel = new Pessoa($mysql);
         $rows = $pessoaModel->getPessoas()['rows'];
         $res->status(200)->toJSON($rows);
     }
-    // #[Route("/api/buscaPessoa?id=1", methods: ["GET"])]
-    public function buscaPessoa(Request $req, Response $res) {
+    public function buscaPessoaAction(Request $req, Response $res) {
         $mysql = $this->mysql->createConnection();
-        $pessoa = $mysql->DBFind("SELECT A.* FROM pessoa A WHERE A.id = ?", [6])['rows'][0];
+        $pessoa = $mysql->DBFind("SELECT A.* FROM pessoa A WHERE A.id = ?", [$req->params["id"]])['rows'][0];
         $pessoa['contatos'] = $mysql->DBFind("SELECT * FROM contato WHERE id_pessoa = {$pessoa['id']}")['rows'];
         $res->status(200)->toJSON($pessoa);
+    }
+    public function editAction(Request $req, Response $res) {
+        $res->status(200)->renderView('edit.phtml');
+    }
+    public function submitPessoaAction(Request $req, Response $res) {
+        $mysql = $this->mysql->createConnection();
+        $pessoa = new Pessoa($mysql);
+        $pessoa->setObject($req->getBody());
+        $pessoa->save();       
     }
 }

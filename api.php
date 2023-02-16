@@ -8,24 +8,7 @@ class Api {
     function __construct() {
         $this->mysql = new Connector();
     }
-    // #[Route("/api/buscaPessoas", methods: ["GET"])]
-    function buscaPessoasAction() {
-        $pessoa = new Pessoa($this->mysql);
-        $rows = $pessoa->getPessoas()['rows'];
-        return json_encode($rows);
-    }
-    // #[Route("/api/buscaPessoa?id=1", methods: ["GET"])]
-    function buscaPessoaAction() {
-        $pessoa = $this->mysql->DBFind("SELECT A.* FROM pessoa A WHERE A.id = ?", [$_GET['id']])['rows'][0];
-        $pessoa['contatos'] = $this->mysql->DBFind("SELECT * FROM contato WHERE id_pessoa = {$pessoa['id']}")['rows'];
-        return json_encode($pessoa);
-    }
-    // #[Route("/api/submitPessoa", methods: ["POST"])]
-    function submitPessoaAction() {
-        $pessoa = new Pessoa($this->mysql, $_POST);
-        $id = $pessoa->save($pessoa);
-        return json_encode(["id" => $id]);
-    }
+
     // #[Route("/api/submitContato", methods: ["POST"])]
     function submitContatoAction() {
         $contato = [

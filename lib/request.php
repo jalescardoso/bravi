@@ -15,22 +15,18 @@ class Request {
         if ($this->reqMethod !== 'POST') {
             return '';
         }
-        $body = [];
-        foreach ($_POST as $key => $value) {
-            $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-        }
-        return $body;
+        if ((bool)$_POST) return $_POST;
+        else return $this->getJSON();
     }
     public function getJSON() {
         if ($this->reqMethod !== 'POST') {
             return [];
         }
-        if (strcasecmp($this->contentType, 'application/json') !== 0) {
+        if (!str_contains($this->contentType, 'application/json')) {
             return [];
         }
-        // Receive the RAW post data.
         $content = trim(file_get_contents("php://input"));
-        $decoded = json_decode($content);
+        $decoded = json_decode($content, true);
         return $decoded;
     }
 }

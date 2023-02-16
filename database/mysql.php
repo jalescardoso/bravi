@@ -89,18 +89,17 @@ class Mysql {
         if ((bool)$stmt->error) throw new \Exception($stmt->error);
         return $stmt;
     }
-    public function commit() {
-        $this->mysqli->autocommit(true);
-        $this->inTransaction = false;
-        $this->mysqli->commit();
-    }
-    public function close() {
-        $this->mysqli->close();
-    }
-    public function startTransaction() {
+    private function startTransaction() {
         if ($this->inTransaction) return;
         $this->mysqli->autocommit(FALSE);
         $this->inTransaction = true;
     }
-
+    public  function commitAndClose() {
+        $this->mysqli->commit();
+        $this->mysqli->close();
+    }
+    public  function rollbackAndClose() {
+        $this->mysqli->rollback();
+        $this->mysqli->close();
+    }
 }

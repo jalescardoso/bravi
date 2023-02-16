@@ -13,4 +13,10 @@ class Response {
         header('Content-Type: application/json');
         echo json_encode($data);
     }
+
+    public function renderView($view) {
+        http_response_code($this->status);
+        header('Content-type: text/html');
+        require_once $_ENV['VIEW_FOLDER'] . $view;
+    }
 }
