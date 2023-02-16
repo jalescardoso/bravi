@@ -7,11 +7,11 @@ use interfaces\{iModel};
 use model\Model;
 
 class Contato extends Model implements iModel {
-    public ?int $id;
-    public int $id_pessoa;
-    public string $descricao;
-    public string $tipo;
-    public float $valor;
+    private ?int $id;
+    private int $id_pessoa;
+    private string $descricao;
+    private string $tipo;
+    private float $valor;
     public function __construct(
         protected Connector $mysql,
     ) {
@@ -25,6 +25,7 @@ class Contato extends Model implements iModel {
             "id_pessoa" => $this->id_pessoa,
             "descricao" => $this->descricao,
             "valor" => $this->valor,
+            "tipo" => $this->tipo,
         ];
     }
     public function setObject(array $data): void {
