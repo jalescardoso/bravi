@@ -95,11 +95,11 @@ class Mysql {
         $this->inTransaction = true;
     }
     public  function commitAndClose() {
-        $this->mysqli->commit();
+        if ($this->inTransaction) $this->mysqli->commit();
         $this->mysqli->close();
     }
     public  function rollbackAndClose() {
-        $this->mysqli->rollback();
+        if ($this->inTransaction) $this->mysqli->rollback();
         $this->mysqli->close();
     }
 }

@@ -6,8 +6,8 @@ use controller\Controller;
 use database\MysqlFactory;
 
 class Contato extends Controller {
-    private MysqlFactory $mysql;
-    function __construct() {
-        $this->mysql = new MysqlFactory();
+    function __construct(
+        private MysqlFactory $mysql
+    ) {
     }
 }
