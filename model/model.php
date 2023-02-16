@@ -6,8 +6,7 @@ use database\Mysql;
 use interfaces\{iModel};
 
 abstract class Model implements iModel {
-    public ?int $id;
-
+    private ?int $id;
     public function __construct(
         protected Mysql $mysql,
         array $model = null
@@ -20,8 +19,5 @@ abstract class Model implements iModel {
             $this->id = $this->mysql->DBInsert($this->getTableName(), $this->getObject());
         }
         return $this->id;
-    }
-    public function getPessoas(): array {
-        return $this->mysql->DBFind("SELECT A.*, (select count(id) from contato WHERE id_pessoa = A.id) qnt_cnt FROM pessoa A");
     }
 }
