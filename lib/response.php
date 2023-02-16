@@ -19,4 +19,9 @@ class Response {
         header('Content-type: text/html');
         require_once $_ENV['VIEW_FOLDER'] . $view;
     }
+
+    public function notFound() {
+        if ($_SERVER["HTTP_SEC_FETCH_MODE"] == "navigate") $this->status(404)->renderView("404.phtml");
+        else $this->status(404)->toJSON(["type" => "erro", "message" => "Route not found"]);
+    }
 }

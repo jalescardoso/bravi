@@ -2,7 +2,7 @@
 
 namespace model;
 
-use Connector;
+use database\Mysql;
 use interfaces\{iModel};
 use model\Model;
 
@@ -13,7 +13,7 @@ class Contato extends Model implements iModel {
     private string $tipo;
     private float $valor;
     public function __construct(
-        protected Connector $mysql,
+        protected Mysql $mysql
     ) {
     }
     public function getTableName(): string {

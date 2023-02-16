@@ -9,6 +9,7 @@ class Router {
         }
         self::on($route, $callback);
     }
+    public static bool $match = false;
     public static function post($route, $callback) {
         if (strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') !== 0) {
             return;
@@ -20,8 +21,8 @@ class Router {
         // $params = $_SERVER['REQUEST_URI'];
         $params = (stripos($params, "/") !== 0) ? "/" . $params : $params;
         $regex = str_replace('/', '\/', $regex);
-        $is_match = preg_match('/^' . ($regex) . '$/', $params, $matches, PREG_OFFSET_CAPTURE);
-        if ($is_match) {
+        self::$match = preg_match('/^' . ($regex) . '$/', $params, $matches, PREG_OFFSET_CAPTURE);
+        if (self::$match) {
             // first value is normally the route, lets remove it
             array_shift($matches);
             // Get the matches as parameters
