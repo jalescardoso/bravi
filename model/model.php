@@ -6,10 +6,9 @@ use database\Mysql;
 use interfaces\{iModel};
 
 abstract class Model implements iModel {
-    private ?int $id;
+    protected ?int $id;
     public function __construct(
-        protected Mysql $mysql,
-        array $model = null
+        protected Mysql $mysql
     ) {
     }
     public function save(): int {
@@ -19,5 +18,8 @@ abstract class Model implements iModel {
             $this->id = $this->mysql->DBInsert($this->getTableName(), $this->getObject());
         }
         return $this->id;
+    }
+    public function delete($id) {
+        $this->mysql->DBDelete($this->getTableName(), "WHERE id = ?", [$id]);
     }
 }

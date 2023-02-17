@@ -137,7 +137,6 @@
 						const url = new URL(location.href);
 						url.searchParams.set('id', res0.data.id);
 						location.href = url.href;
-						return;
 					} else {
 						let res = await buscaPessoa(this.data.id);
 						this.data = res.data;

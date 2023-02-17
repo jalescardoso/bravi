@@ -7,11 +7,11 @@ use interfaces\{iModel};
 use model\Model;
 
 class Contato extends Model implements iModel {
-    private ?int $id;
+    protected ?int $id;
     private int $id_pessoa;
     private string $descricao;
     private string $tipo;
-    private float $valor;
+    private string $valor;
     public function __construct(
         protected Mysql $mysql
     ) {

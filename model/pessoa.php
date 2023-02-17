@@ -7,7 +7,7 @@ use interfaces\{iModel};
 use model\Model;
 
 class Pessoa extends Model implements iModel {
-    private ?int $id;
+    protected ?int $id;
     private string $nome;
     public function __construct(
         protected Mysql $mysql

@@ -1,26 +1,29 @@
 <?php
 
 namespace Lib;
-use database\MysqlFactory;
+
+use Lib\Factory;
 
 class App {
-    private MysqlFactory $mysql;
+    private Factory $factory;
     function __construct() {
-        $this->mysql = new MysqlFactory();
+        $this->factory = new Factory();
     }
     public function handler($cb, Request $req, Response $res) {
         try {
-            $a = new $cb[0]($this->mysql);
+            $a = new $cb[0]($this->factory);
             $a->{$cb[1]}($req, $res);
-            $conn = $this->mysql->getConnection();
+            $conn = $this->factory->checkDBConnection();
             if(isset($conn)) $conn->commitAndClose();
         } catch (\Throwable $e) {
-            $conn = $this->mysql->getConnection();
+            $conn = $this->factory->checkDBConnection();
             if(isset($conn)) $conn->rollbackAndClose();
             $res->status(500)->toJSON([
                 'status' => 'erro',
                 'message' => $e->getMessage()
             ]);
+            $log = $this->factory->getLogger();
+            $log->error((string)$e);
         }
     }
 }

@@ -2,20 +2,24 @@
 
 namespace controller;
 
-use controller\Controller;
-use database\MysqlFactory;
 use model\Contato;
-use Lib\{Request, Response};
+use Lib\{Request, Response, Factory};
 
-class ContatoController extends Controller {
+class ContatoController {
     function __construct(
-        private MysqlFactory $mysql
+        private Factory $factory
     ) {
     }
     public function submitContatoAction(Request $req, Response $res) {
-        $mysql = $this->mysql->createConnection();
+        $mysql = $this->factory->createConnection();
         $pessoa = new Contato($mysql);
         $pessoa->setObject($req->getBody());
-        $pessoa->save();       
+        $id = $pessoa->save();
+        $res->status(200)->toJSON(['id' => $id]);
+    }
+    public function deleteAction(Request $req, Response $res) {
+        $mysql = $this->factory->createConnection();
+        $pessoa = new Contato($mysql);
+        $pessoa->delete($req->params["id"]);
     }
 }
