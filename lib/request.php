@@ -8,6 +8,7 @@ class Request {
     public $contentType;
     public function __construct($params = []) {
         $this->params = $params;
+        $this->params = array_merge($params, $_GET);
         $this->reqMethod = trim($_SERVER['REQUEST_METHOD']);
         $this->contentType = !empty($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
     }

@@ -33,7 +33,6 @@ class Router {
             $params = array_map(function ($param) {
                 return $param[0];
             }, $matches);
-            $params = array_merge($params, $_GET);
             $app = new App();
             $app->handler($cb, new Request($params), new Response());
         }
