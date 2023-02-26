@@ -5,13 +5,14 @@ namespace model;
 use database\Mysql;
 use interfaces\{iModel};
 use model\Model;
-
+use lib\Factory;
 class Pessoa extends Model implements iModel {
     protected ?int $id;
     private string $nome;
     public function __construct(
-        protected Mysql $mysql
+        public Factory $factory
     ) {
+        parent::__construct($factory);
     }
     public function getTableName(): string {
         return "pessoa";
@@ -22,11 +23,13 @@ class Pessoa extends Model implements iModel {
             "nome" => $this->nome
         ];
     }
-    public function getPessoas(): array {
-        return $this->mysql->DBFind("SELECT A.*, (select count(id) from contato WHERE id_pessoa = A.id) qnt_cnt FROM pessoa A");
-    }
     public function setObject(array $data): void {
         $this->id   = $data['id'] ?: null;
         $this->nome = $data['nome'] ?: throw new \Exception("Nome da pessoa obrigatório");
     }
+
+    public function getPessoas(): array {
+        return $this->select(['*'])->all();
+    }
+    
 }

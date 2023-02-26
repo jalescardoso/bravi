@@ -34,7 +34,7 @@ class Router {
                 return $param[0];
             }, $matches);
             $app = new App();
-            $app->handler($cb, new Request($params), new Response());
+            $app->handle($cb, new Request($params), new Response());
         }
     }
 }

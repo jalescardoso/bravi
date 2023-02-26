@@ -6,7 +6,7 @@ use Lib\{Request, Response, Factory};
 
 class SuportesController {
     function __construct(
-        private Factory $factory
+        public Factory $factory
     ) {
     }
     public function editAction(Request $req, Response $res) {

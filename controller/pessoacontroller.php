@@ -4,40 +4,45 @@ namespace controller;
 
 use model\Pessoa;
 use Lib\{Request, Response, Factory};
+use model\Contato;
 
 class PessoaController {
     function __construct(
-        private Factory $factory
+        public Factory $factory
     ) {
+    }
+    public function teste(Request $req, Response $res) {
+        // $pessoa = new Pessoa($this->factory);
+        // $result = $pessoa->select([Pessoa::id])
     }
     public function indexAction(Request $req, Response $res) {
         $res->status(200)->renderView('index.phtml');
     }
     function buscaPessoasAction(Request $req, Response $res) {
-        $mysql = $this->factory->createConnection();
-        $pessoaModel = new Pessoa($mysql);
-        $rows = $pessoaModel->getPessoas()['rows'];
-        $res->status(200)->toJSON($rows);
+        $pessoa = new Pessoa($this->factory);
+        $result = $pessoa->select(['*'])->all()->rows;
+        $res->status(200)->toJSON($result);
     }
     public function buscaPessoaAction(Request $req, Response $res) {
-        $mysql = $this->factory->createConnection();
-        $pessoa = $mysql->DBFind("SELECT A.* FROM pessoa A WHERE A.id = ?", [$req->params["id"]])['rows'][0];
-        $pessoa['contatos'] = $mysql->DBFind("SELECT * FROM contato WHERE id_pessoa = {$pessoa['id']}")['rows'];
+        $pessoa = new Pessoa($this->factory);
+        $pessoa = $pessoa->select(['*'])->where('id', (int)$req->params["id"])->all()->rows[0];
+        $contato = new Contato($this->factory);
+        $pessoa['contatos'] = $contato->select(['*'])->where('id_pessoa', $pessoa['id'])->all()->rows;
         $res->status(200)->toJSON($pessoa);
     }
     public function editAction(Request $req, Response $res) {
         $res->status(200)->renderView('edit.phtml');
     }
     public function submitPessoaAction(Request $req, Response $res) {
-        $mysql = $this->factory->createConnection();
-        $pessoa = new Pessoa($mysql);
+        $mysql = $this->factory->getConn();
+        $pessoa = new Pessoa($this->factory);
         $pessoa->setObject($req->getBody());
         $id = $pessoa->save();
         $res->status(200)->toJSON(['id' => $id]);
     }
     public function deleteAction(Request $req, Response $res) {
-        $mysql = $this->factory->createConnection();
-        $pessoa = new Pessoa($mysql);
+        $mysql = $this->factory->getConn();
+        $pessoa = new Pessoa($this->factory);
         $pessoa->delete($req->params["id"]);
     }
 }

@@ -9,7 +9,7 @@ class App {
     function __construct() {
         $this->factory = new Factory();
     }
-    public function handler($cb, Request $req, Response $res) {
+    public function handle($cb, Request $req, Response $res) {
         try {
             $a = new $cb[0]($this->factory);
             $a->{$cb[1]}($req, $res);

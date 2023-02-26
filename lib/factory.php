@@ -8,7 +8,7 @@ use Lib\Log;
 class Factory {
     private Mysql $mysql;
     private Log $logger;
-    public function createConnection(): Mysql {
+    public function getConn(): Mysql {
         if (isset($this->mysql)) return $this->mysql;
         $this->mysql = new Mysql($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME'], $_ENV['DB_PORT']);
         return $this->mysql;

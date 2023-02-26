@@ -5,16 +5,17 @@ namespace model;
 use database\Mysql;
 use interfaces\{iModel};
 use model\Model;
-
+use lib\Factory;
 class Contato extends Model implements iModel {
     protected ?int $id;
-    private int $id_pessoa;
+    private static int $id_pessoa;
     private string $descricao;
     private string $tipo;
     private string $valor;
     public function __construct(
-        protected Mysql $mysql
+        public Factory $factory
     ) {
+        parent::__construct($factory);
     }
     public function getTableName(): string {
         return "contato";

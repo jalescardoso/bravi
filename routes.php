@@ -3,6 +3,7 @@
 use Lib\{Router, Response};
 
 Router::get('/', ['controller\PessoaController', 'indexAction']);
+Router::get('/a', ['controller\PessoaController', 'teste']);
 Router::get('/pessoa', ['controller\PessoaController', 'editAction']);
 Router::get('/api/buscaPessoas', ['controller\PessoaController', 'buscaPessoasAction']);
 Router::get('/api/buscaPessoa', ['controller\PessoaController', 'buscaPessoaAction']);
