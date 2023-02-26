@@ -11,10 +11,6 @@ class PessoaController {
         public Factory $factory
     ) {
     }
-    public function teste(Request $req, Response $res) {
-        // $pessoa = new Pessoa($this->factory);
-        // $result = $pessoa->select([Pessoa::id])
-    }
     public function indexAction(Request $req, Response $res) {
         $res->status(200)->renderView('index.phtml');
     }
@@ -34,14 +30,12 @@ class PessoaController {
         $res->status(200)->renderView('edit.phtml');
     }
     public function submitPessoaAction(Request $req, Response $res) {
-        $mysql = $this->factory->getConn();
         $pessoa = new Pessoa($this->factory);
         $pessoa->setObject($req->getBody());
         $id = $pessoa->save();
         $res->status(200)->toJSON(['id' => $id]);
     }
     public function deleteAction(Request $req, Response $res) {
-        $mysql = $this->factory->getConn();
         $pessoa = new Pessoa($this->factory);
         $pessoa->delete($req->params["id"]);
     }

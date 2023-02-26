@@ -9,11 +9,11 @@ use stdClass;
 
 abstract class Model implements iModel, sqlquerybuilder {
     protected ?int $id;
+    protected $query;
     public function __construct(
         public Factory $factory
     ) {
     }
-    // mudar isso 
     public function save(): int {
         $conn = $this->factory->getConn();
         if ((bool)$this->id) {
@@ -27,10 +27,10 @@ abstract class Model implements iModel, sqlquerybuilder {
         $conn = $this->factory->getConn();
         $conn->DBDelete($this->getTableName(), "WHERE id = ?", [$id]);
     }
-    protected $query;
     protected function reset(): void {
         $this->query = new \stdClass();
         $this->query->params = [];
+        $this->query->join = [];
     }
     public function select(array $columns = ['*']): sqlquerybuilder {
         $this->reset();
@@ -68,9 +68,6 @@ abstract class Model implements iModel, sqlquerybuilder {
         $return->num_rows = $result->num_rows;
         $return->rows = $result->fetch_all(MYSQLI_ASSOC);
         return $return;
-    }
-    public function join(string $table, string $type): sqlquerybuilder {
-        return $this;
     }
     public function limit(int $start, int $offset): sqlquerybuilder {
         if (!in_array($this->query->type, ['select'])) {

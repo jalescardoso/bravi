@@ -6,6 +6,7 @@ use database\Mysql;
 use interfaces\{iModel};
 use model\Model;
 use lib\Factory;
+
 class Pessoa extends Model implements iModel {
     protected ?int $id;
     private string $nome;
@@ -27,9 +28,4 @@ class Pessoa extends Model implements iModel {
         $this->id   = $data['id'] ?: null;
         $this->nome = $data['nome'] ?: throw new \Exception("Nome da pessoa obrigatório");
     }
-
-    public function getPessoas(): array {
-        return $this->select(['*'])->all();
-    }
-    
 }

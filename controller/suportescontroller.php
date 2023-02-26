@@ -12,7 +12,7 @@ class SuportesController {
     public function editAction(Request $req, Response $res) {
         $res->status(200)->renderView('suportes-balanceados.phtml');
     }
-    function suporteBalanceadosAction(Request $req, Response $res) {
+    public function suporteBalanceadosAction(Request $req, Response $res) {
         $string_param = $req->getBody()['string'];
         $checkFunction = function ($string_param) {
             $pairs = function ($x) {

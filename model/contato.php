@@ -8,7 +8,7 @@ use model\Model;
 use lib\Factory;
 class Contato extends Model implements iModel {
     protected ?int $id;
-    private static int $id_pessoa;
+    private int $id_pessoa;
     private string $descricao;
     private string $tipo;
     private string $valor;
