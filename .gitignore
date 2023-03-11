@@ -1,5 +1,8 @@
 .vscode
 vendor
 logs
-*.log*
 *.lock
+db/*
+!db/.gitkeep
+log/*
+!log/.gitkeep

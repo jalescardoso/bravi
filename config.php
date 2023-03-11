@@ -1,9 +1,4 @@
 <?php
-
-$_ENV['DB_HOST'] =      'localhost';
-$_ENV['DB_USERNAME'] =  'root';
-$_ENV['DB_PASSWORD'] =  'root';
-$_ENV['DB_PORT'] =      '3306';
-$_ENV['DB_NAME'] =      'bravi';
+if (!(bool)$_ENV) $_ENV = getenv();
 $_ENV['VIEW_FOLDER'] =   __DIR__ . '/view/';
 $_ENV['LOG_PATH']    =   __DIR__ ;

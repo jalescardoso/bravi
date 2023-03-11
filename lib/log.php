@@ -10,7 +10,7 @@ class Log extends Logger {
 
     public function __construct(string $name = 'main') {
         parent::__construct($name);
-        $stream = new StreamHandler($_ENV['LOG_PATH'] . '/app.log', Level::Debug);
+        $stream = new StreamHandler($_ENV['LOG_PATH'] . '/log/app.log', Level::Debug);
         $firephp = new FirePHPHandler();
         $erroLog = new ErrorLogHandler();
         $this->pushHandler($stream);
