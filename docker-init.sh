@@ -11,7 +11,7 @@ sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 30M/g" $PHP_INI_DIR/php
 sed -i "s/memory_limit = 128M/memory_limit = 1024M/g" $PHP_INI_DIR/php.ini
 
 echo "<VirtualHost *:80>
-    ServerAdmin suporte@ileva.com.br
+    ServerAdmin contato@jales.dev
     DocumentRoot /var/www/html
     <Directory /var/www/html/>
         Options SymLinksIfOwnerMatch
